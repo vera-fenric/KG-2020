@@ -1,0 +1,9 @@
+﻿  CG.cpp
+C:\Users\Vera\source\repos\CG\CG.cpp(127,19): warning C4244: аргумент: преобразование "double" в "const _Ty", возможна потеря данных
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\Vera\source\repos\CG\CG.cpp(136,34): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+C:\Users\Vera\source\repos\CG\CG.cpp(138,34): warning C4244: -=: преобразование "double" в "float", возможна потеря данных
+  CG.vcxproj -> C:\Users\Vera\source\repos\CG\x64\Debug\CG.exe
