@@ -1,1 +1,16 @@
-﻿  CG.vcxproj -> C:\Users\Vera\source\repos\CG\x64\Debug\CG.exe
+﻿  CG.cpp
+C:\Users\Vera\source\repos\CG\mesh.h(70,1): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
+C:\Users\Vera\source\repos\CG\model.h(64,27): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Vera\source\repos\CG\model.h(69,27): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Vera\source\repos\CG\model.h(84,27): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Vera\source\repos\CG\model.h(109,27): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Vera\source\repos\CG\model.h(111,31): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Vera\source\repos\CG\model.h(138,27): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Vera\source\repos\CG\CG.cpp(129,19): warning C4244: аргумент: преобразование "double" в "const _Ty", возможна потеря данных
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\Vera\source\repos\CG\CG.cpp(133,32): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+C:\Users\Vera\source\repos\CG\CG.cpp(145,35): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+  CG.vcxproj -> C:\Users\Vera\source\repos\CG\x64\Debug\CG.exe
