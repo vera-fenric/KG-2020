@@ -31,49 +31,45 @@ public:
     vector<Texture>      textures;  //массив текстур    
     GLuint VAO;   //привязанный vertex array object
 
-    Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
+    Mesh(vector<Vertex> v, vector<unsigned int> i, vector<Texture> t)
     {
-        this->vertices = vertices;
-        this->indices = indices;
-        this->textures = textures;
+        vertices = v;
+        indices = i;
+        textures = t;
 
         setupMesh();
     }
 
     void Draw()
     {
-        // bind appropriate textures
+        //чтобы нарисовать, надо сначала привязать текстуры
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
-        unsigned int normalNr = 1;
         unsigned int heightNr = 1;
+        unsigned int ambientNr = 1;
         for (unsigned int i = 0; i < textures.size(); i++)
         {
-            glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
-            // retrieve texture number (the N in diffuse_textureN)
+            glActiveTexture(GL_TEXTURE0 + i); // активируем ттекстуру
             string number;
             string name = textures[i].type;
             if (name == "texture_diffuse")
-                number = std::to_string(diffuseNr++);
+                number = to_string(diffuseNr++);
             else if (name == "texture_specular")
-                number = std::to_string(specularNr++); // transfer unsigned int to stream
-            else if (name == "texture_normal")
-                number = std::to_string(normalNr++); // transfer unsigned int to stream
+                number = to_string(specularNr++);
             else if (name == "texture_height")
-                number = std::to_string(heightNr++); // transfer unsigned int to stream
+                number = to_string(heightNr++);
+            else if (name == "texture_ambient")
+                number = to_string(ambientNr++);
 
-            // now set the sampler to the correct texture unit
-            glUniform1i(glGetUniformLocation(program, (name + number).c_str()), i);
-            // and finally bind the texture
-            glBindTexture(GL_TEXTURE_2D, textures[i].id);
+            glUniform1i(glGetUniformLocation(program, (name + number).c_str()), i); //связываем texture_typeN с i-ой текстурой
+            glBindTexture(GL_TEXTURE_2D, textures[i].id);   //привязываем текущую i-ую текструру к текстуре из массива текстур
         }
         
-        // draw mesh
+        //рисуем меш
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
-        // always good practice to set everything back to defaults once configured.
         glActiveTexture(GL_TEXTURE0);
     }
 

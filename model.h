@@ -6,7 +6,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <FreeImage.h>
+#define STB_IMAGE_IMPLEMENTATION  
+#include <stb/stb_image.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -120,11 +121,11 @@ private:
         vector<Texture> specularMaps = loadMaterialTextures(assimp_model->mMaterials[mesh->mMaterialIndex], aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         // карты нормалей
-        vector<Texture> normalMaps = loadMaterialTextures(assimp_model->mMaterials[mesh->mMaterialIndex], aiTextureType_HEIGHT, "texture_normal");
-        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-        // и карты высот
-        vector<Texture> heightMaps = loadMaterialTextures(assimp_model->mMaterials[mesh->mMaterialIndex], aiTextureType_AMBIENT, "texture_height");
+        vector<Texture> heightMaps = loadMaterialTextures(assimp_model->mMaterials[mesh->mMaterialIndex], aiTextureType_HEIGHT, "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+        // и карты высот
+        vector<Texture> ambientMaps = loadMaterialTextures(assimp_model->mMaterials[mesh->mMaterialIndex], aiTextureType_AMBIENT, "texture_ambient");
+        textures.insert(textures.end(), ambientMaps.begin(), ambientMaps.end());
         
         //ну в возвращаем собранную меш
         return Mesh(vertices, indices, textures);
@@ -164,16 +165,27 @@ unsigned int TextureFromFile(const char* path, const string& directory)
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
-    int width, height;
-    FIBITMAP * bitmap = FreeImage_Load(FIF_PNG, filename.c_str(), PNG_DEFAULT);
-    if (bitmap)
+    int width, height, nrComponents;
+    unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    if (data)
     {
-        width = FreeImage_GetWidth(bitmap);
-        height = FreeImage_GetHeight(bitmap);
         GLenum format = GL_RGBA;
+        if (nrComponents == 1) {
+            format = GL_RED;
+            //cout << "RED " << path << endl;
+        }
+        else if (nrComponents == 3) {
+            format = GL_RGB;
+            //cout << "GRB " << path << endl;
+        }
+        else if (nrComponents == 4) {
+            format = GL_RGBA;
+            //cout << "GRBA " << path << endl;
+        };
+
 
         glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, bitmap);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -181,11 +193,12 @@ unsigned int TextureFromFile(const char* path, const string& directory)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        free(bitmap);
+        stbi_image_free(data);
     }
     else
     {
-        throw exception (path);
+        stbi_image_free(data);
+        throw exception(path);
     }
 
     return textureID;

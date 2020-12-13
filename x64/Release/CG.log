@@ -1,0 +1,33 @@
+﻿CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewEnableVertexAttribArray.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewBindVertexArray.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewUseProgram.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewVertexAttribPointer.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewGetShaderiv.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewCompileShader.
+CG.obj : error LNK2001: неразрешенный внешний символ aiGetMaterialTextureCount.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewCreateShader.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewBindBuffer.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewCreateProgram.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewUniform1i.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewGetShaderInfoLog.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewGetProgramiv.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewGetUniformLocation.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewBufferData.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewAttachShader.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewActiveTexture.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewShaderSource.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewGenVertexArrays.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewUniformMatrix4fv.
+CG.obj : error LNK2001: неразрешенный внешний символ "public: char const * __cdecl Assimp::Importer::GetErrorString(void)const " (?GetErrorString@Importer@Assimp@@QEBAPEBDXZ).
+CG.obj : error LNK2001: неразрешенный внешний символ "public: struct aiScene const * __cdecl Assimp::Importer::ReadFile(char const *,unsigned int)" (?ReadFile@Importer@Assimp@@QEAAPEBUaiScene@@PEBDI@Z).
+CG.obj : error LNK2001: неразрешенный внешний символ "public: __cdecl Assimp::Importer::~Importer(void)" (??1Importer@Assimp@@QEAA@XZ).
+CG.obj : error LNK2001: неразрешенный внешний символ "public: __cdecl Assimp::Importer::Importer(void)" (??0Importer@Assimp@@QEAA@XZ).
+CG.obj : error LNK2001: неразрешенный внешний символ aiGetMaterialTexture.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewGetProgramInfoLog.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewGenBuffers.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewGenerateMipmap.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewDeleteShader.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewUniform4fv.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp___glewLinkProgram.
+CG.obj : error LNK2001: неразрешенный внешний символ __imp_glewInit.
+C:\Users\Vera\source\repos\CG\x64\Release\CG.exe : fatal error LNK1120: неразрешенных внешних элементов: 32

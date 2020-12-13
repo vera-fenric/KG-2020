@@ -10,7 +10,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\\Users\\Vera\\Desktop\\cc\\textures\\0.png
+map_Bump textures\\wb_normal.png
+map_Kd textures\\wb_diffuse.png
+
 
 newmtl DIFFUSE.003
 Ns 96.078431
@@ -21,3 +23,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd textures\\wb2_diffuse.png
