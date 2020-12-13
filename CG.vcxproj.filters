@@ -27,13 +27,10 @@
     <ClInclude Include="init.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="cb.h">
+    <ClInclude Include="mesh.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="vertex.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="CyberChan.h">
+    <ClInclude Include="model.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

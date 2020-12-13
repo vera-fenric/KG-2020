@@ -1,8 +1,18 @@
 #version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNormal;
+layout (location = 2) in vec2 aTexCoords;
+layout (location = 3) in vec3 Tangent;
+layout (location = 4) in vec3 Bitangent;
 
-in vec3 model_pos;
-uniform mat4 mvp;
+out vec2 TexCoords;
 
-void main() {
-	gl_Position = mvp * vec4(model_pos, 1.0);
+uniform mat4 proj;
+uniform mat4 view;
+uniform mat4 model;
+
+void main()
+{
+    TexCoords = aTexCoords;    
+    gl_Position = proj * view * model * vec4(aPos, 1.0);
 }

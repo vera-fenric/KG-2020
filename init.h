@@ -14,6 +14,10 @@ using namespace std;
 GLuint program;
 void init() {
 
+	GLint success;
+	GLchar info_log[1000];
+	int log_len;
+
 	setlocale(LC_ALL, "rus");
 	ifstream fv("scene.vert");
 	if (!fv.is_open())
@@ -29,8 +33,8 @@ void init() {
 
 	//Создаём объекты программа и шейдеры
 	program = glCreateProgram();
-	GLenum vertex_shader = glCreateShader(GL_VERTEX_SHADER_ARB);
-	GLenum fragment_shader = glCreateShader(GL_FRAGMENT_SHADER_ARB);
+	GLenum vertex_shader = glCreateShader(GL_VERTEX_SHADER/*_ARB*/);
+	GLenum fragment_shader = glCreateShader(GL_FRAGMENT_SHADER/*_ARB*/);
 
 	//Загружаем тексты шейдеров в шейдеры
 	const char* src = vsh_src.c_str();
@@ -42,6 +46,20 @@ void init() {
 	glCompileShader(vertex_shader);
 	glCompileShader(fragment_shader);
 
+	//проверяем, что всё скомпилилось (больше нужно для отладки)
+	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
+		cout << "Ошибка: вершинный шейдер не скомпилировался\n" << info_log << endl;
+	};
+	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(fragment_shader, 512, NULL, info_log);
+		cout << "Ошибка: фрагментный шейдер не скомпилировался\n" << info_log << endl;
+	};
+
 	//Прикрепляем шейдеры к программе
 	glAttachShader(program, vertex_shader);
 	glAttachShader(program, fragment_shader);
@@ -49,12 +67,17 @@ void init() {
 	//Линкуем программу
 	glLinkProgram(program);
 
-	//Печатаем лог получившейся программы
-	char log[10000];
-	int log_len;
-	glGetProgramInfoLog(program, sizeof(log) / sizeof(log[0]) - 1, &log_len, log);
-	log[log_len] = 0;
-	cout << "Shader compile result: " << log << endl;
+	//Печатаем лог получившейся программы, если появились ошибки в сборке
+	glGetProgramiv(program, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetProgramInfoLog(program, sizeof(info_log) / sizeof(info_log[0]) - 1, &log_len, info_log);
+		cout << "Ошибка: линковка программы\n" << info_log << endl;
+	}
+
+	//удаляем шейдеры за ненадобностью
+	glDeleteShader(vertex_shader);
+	glDeleteShader(fragment_shader);
 }
 
 #endif
