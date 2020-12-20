@@ -36,7 +36,12 @@ public:
         Assimp::Importer importer;
         const aiScene* assimp_model = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
         //проверка на ошибки
-        if (!assimp_model || assimp_model->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !assimp_model->mRootNode)
+
+        if (!assimp_model)
+            throw exception(importer.GetErrorString());
+        else if (assimp_model->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
+            throw exception(importer.GetErrorString());
+        else if (!assimp_model->mRootNode)
             throw exception(importer.GetErrorString());
         
         //устанавливаем путь, по которому лежит моделька
@@ -44,12 +49,13 @@ public:
 
         //запускаем рекурсивное вычисление Nod'ов модельки, начиная с root'а
         processNode(assimp_model->mRootNode, assimp_model);
+
     }
 
     //чтобы нарисовать модельку, просто рисуем каждую меш
-    void Draw(){
+    void Draw(GLuint program){
         for (int i = 0; i < meshes.size(); i++)
-            meshes[i].Draw();
+            meshes[i].Draw(program);
     }
 
 private:

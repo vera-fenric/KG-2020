@@ -149,12 +149,17 @@
   <ItemGroup>
     <None Include="scene.frag" />
     <None Include="scene.vert" />
+    <None Include="shadow.frag" />
+    <None Include="shadow.vert" />
+    <None Include="post_effect.frag" />
+    <None Include="post_effect.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="init.h" />
-    <ClInclude Include="lamp.h" />
+    <ClInclude Include="post_effect_scene.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="program.h" />
+    <ClInclude Include="Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

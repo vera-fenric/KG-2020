@@ -8,6 +8,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 using namespace std;
 
 struct Vertex { //у вершины 5 аттрибутов: позиция, нормаль, текстурные координаты, касательная и бикасаетльная
@@ -40,7 +41,7 @@ public:
         setupMesh();
     }
 
-    void Draw()
+    void Draw(GLuint program)
     {
         //чтобы нарисовать, надо сначала привязать текстуры
         unsigned int diffuseNr = 1;
@@ -49,7 +50,8 @@ public:
         unsigned int ambientNr = 1;
         for (unsigned int i = 0; i < textures.size(); i++)
         {
-            glActiveTexture(GL_TEXTURE0 + i); // активируем ттекстуру
+            
+            glActiveTexture(GL_TEXTURE0 + i + 4); // активируем текстурный блок GL_TEXTURE(i+2) (чтобы нумеровать, начиная с 2, GL_TEXTURE0 и GL_TEXTURE1 нам понадобятся потом
             string number;
             string name = textures[i].type;
             if (name == "texture_diffuse")
@@ -60,9 +62,10 @@ public:
                 number = to_string(heightNr++);
             else if (name == "texture_ambient")
                 number = to_string(ambientNr++);
-
-            glUniform1i(glGetUniformLocation(program, (name + number).c_str()), i); //связываем texture_typeN с i-ой текстурой
-            glBindTexture(GL_TEXTURE_2D, textures[i].id);   //привязываем текущую i-ую текструру к текстуре из массива текстур
+                
+            //cout << glGetUniformLocation(program, (name + number).c_str())<< " " << name << number << endl;
+            glUniform1i(glGetUniformLocation(program, (name + number).c_str()), i+4); //связываем texture_typeN с i+2-ым текстурным блоком
+            glBindTexture(GL_TEXTURE_2D, textures[i].id);   //привязываем текстурный блок и i-ую текструру из массива текстур
         }
         
         //рисуем меш

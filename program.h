@@ -1,5 +1,5 @@
-#ifndef INIT_H
-#define INIT_H
+#ifndef PROGRAM_H
+#define PROGRAM_H
 
 #include<GL/glew.h>
 #include<GL/freeglut.h>
@@ -11,18 +11,17 @@
 
 using namespace std;
 
-GLuint program;
-void init() {
-
+GLuint build_shaders(const char * filevs, const char * filefs) {	//filevs - файл вершинного шейдера, filefs - файл фрагментного шейдера, возвращаемое значение - ID программы
+	GLuint program;
 	GLint success;
 	GLchar info_log[1000];
 	int log_len;
 
 	setlocale(LC_ALL, "rus");
-	ifstream fv("scene.vert");
+	ifstream fv(filevs);
 	if (!fv.is_open())
 		throw exception("Не найден вершинный шейдер");
-	ifstream ff("scene.frag");
+	ifstream ff(filefs);
 	if (!ff.is_open())
 		throw exception("Не найден шрагментный шейдер");
 
@@ -33,8 +32,8 @@ void init() {
 
 	//Создаём объекты программа и шейдеры
 	program = glCreateProgram();
-	GLenum vertex_shader = glCreateShader(GL_VERTEX_SHADER/*_ARB*/);
-	GLenum fragment_shader = glCreateShader(GL_FRAGMENT_SHADER/*_ARB*/);
+	GLenum vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	GLenum fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
 	//Загружаем тексты шейдеров в шейдеры
 	const char* src = vsh_src.c_str();
@@ -78,6 +77,8 @@ void init() {
 	//удаляем шейдеры за ненадобностью
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
+
+	return program;
 }
 
 #endif
