@@ -20,20 +20,27 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="scene.vert" />
     <None Include="scene.frag" />
+    <None Include="scene.vert" />
+    <None Include="shadow.frag" />
+    <None Include="shadow.vert" />
+    <None Include="post_effect.frag" />
+    <None Include="post_effect.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="init.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="lamp.h">
+    <ClInclude Include="program.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="post_effect_scene.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
