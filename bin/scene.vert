@@ -17,9 +17,10 @@ uniform mat4 proj;
 uniform mat4 view;
 uniform mat4 model_pos;
 
-uniform vec3 LightPosition;
+uniform vec3 light_pos;
 uniform mat4 light_view;
 uniform mat4 light_proj;
+uniform mat4 normal_matrix;
 out vec2 TexCoords;
 
 void main()
@@ -27,13 +28,14 @@ void main()
     TexCoords = vec2(vPosition.x, vPosition.y);
     vec4 Position = view * model_pos * vec4(vPosition, 1.0);
     fPosition = Position.xyz/Position.w;
-    fNormal = normalize(transpose(inverse(mat3(model_pos))) * vNormal);
-    fLightDirection = normalize(LightPosition - fPosition);
+
+    fNormal = normalize((normal_matrix * vec4(vNormal, 1.0)).xyz);
+    fLightDirection = normalize(light_pos - fPosition);// направление в сторону света
 
     fPosLightSpace = light_proj * light_view * model_pos * vec4(vPosition, 1.0);
 
-    fTangent = normalize(transpose(inverse(mat3(model_pos))) * vTangent);
-    fBitangent = normalize(transpose(inverse(mat3(model_pos))) * vBitangent);
+    fTangent = normalize((normal_matrix * vec4(vTangent, 1.0)).xyz);
+    fBitangent = normalize((normal_matrix * vec4(vBitangent, 1.0)).xyz);
     fTextureCoordinates = vTextureCoordinates;
     gl_Position = proj * Position;
 }

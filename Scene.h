@@ -52,10 +52,17 @@ public:
 			glm::rotate(rot_angl_2, glm::vec3(0.0f, 1.0f, 0.0f)) *
 			glm::rotate(rot_angl_1, glm::vec3(0.0f, 1.0f, 0.0f));
 
+		glm::mat4x4 Normal_Maxtix1= glm::rotate(rot_angl_1, glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4x4 Normal_Maxtix2 = glm::rotate(rot_angl_2, glm::vec3(0.0f, 1.0f, 0.0f)) *
+			glm::rotate(rot_angl_1, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(program, "normal_matrix"), 1, GL_FALSE, &(Normal_Maxtix2)[0][0]);
+
 		//рисуем дерево
 		glUniformMatrix4fv(glGetUniformLocation(program, "model_pos"), 1, GL_FALSE, &(Models_position[2])[0][0]);//привязка идентификаторов шейдерной программы и нашей
 		Models[2].Draw(program);
 
+
+		glUniformMatrix4fv(glGetUniformLocation(program, "normal_matrix"), 1, GL_FALSE, &(Normal_Maxtix1)[0][0]);
 		//рисуем внутренность шкафа
 		glEnable(GL_STENCIL_TEST);	//включаем тест трафарета
 		glStencilOp(GL_ZERO, GL_ZERO, GL_REPLACE);	//настраиваем тест трафарета и глубины
@@ -67,6 +74,7 @@ public:
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 		glStencilFunc(GL_EQUAL, 1, 1);
 
+		//glUniformMatrix4fv(glGetUniformLocation(program, "normal_matrix"), 1, GL_FALSE, &(Normal_Maxtix2)[0][0]); _исправить!
 		//рисуем Отражённое дерево
 		glDepthMask(GL_FALSE);
 		Models_position[2] = glm::translate(glm::vec3(0.0f, -0.95f, 0.0f)) * glm::scale(glm::vec3(1.0f, -1.0f, 1.0f)) * Models_position[2];
@@ -77,6 +85,8 @@ public:
 		//выключаем тест трафарета
 		glDisable(GL_STENCIL_TEST);
 
+
+		glUniformMatrix4fv(glGetUniformLocation(program, "normal_matrix"), 1, GL_FALSE, &(Normal_Maxtix1)[0][0]);
 		//рисуем внутренности шкафа2
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

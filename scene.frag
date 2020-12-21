@@ -13,12 +13,13 @@ in vec4 fPosLightSpace;
 uniform sampler2D texture_diffuse1;
 //uniform sampler2D texture_specular1;
 uniform sampler2D texture_height1;
-//uniform sampler2D texture_ambient1;
+uniform sampler2D texture_ambient1;
 uniform sampler2D shadowMap;
 
-uniform vec4 LightDiffuse = vec4(1.0,1.0,1.0,1.0);
-uniform vec4 LightAmbient = vec4(0.4,0.4,0.4,1.0);
-uniform float Shine = 10.0f;
+uniform vec3 LightSpecular = vec3(1.0,1.0,1.0);
+uniform vec3 LightColor = vec3(1.0,0.8,0.5);
+uniform vec3 LightAmbient = vec3(0.2,0.2,0.2);
+uniform float Shine = 1.0f;
 
 in vec2 TexCoords;
 
@@ -29,6 +30,7 @@ float ShadowCalculation(vec4 fPosLightSpace)
 	float closestDepth = texture(shadowMap, fPosLightSpace3.xy).r;
 	float currentDepth = fPosLightSpace3.z;
 	float shadow = 0.0;
+	float shift;
 	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
 	for(int x = -2; x <= 2; ++x)		//усредняем значение тени
 	{
@@ -47,37 +49,30 @@ float ShadowCalculation(vec4 fPosLightSpace)
 
 void main()
 {
-	//color = texture(shadowMap, TexCoords);
-	//float shadow = ShadowCalculation(fPosLightSpace);
-	//color = vec4((1.0-shadow)*vec3(1.0, 1.0, 1.0), 1.0);
-	//color = vec4((1-ShadowCalculation(fPosLightSpace)) * vec3(0.5,0.5,0.5),1.0);
-	///*
+
 	vec3 ViewerDirection = normalize(-fPosition);
-	vec3 HalfAngle = normalize(normalize(ViewerDirection) + fLightDirection);
+	vec3 HalfAngle = normalize(ViewerDirection + fLightDirection);
 
 	float shadow = ShadowCalculation(fPosLightSpace);
 
-	vec4 Diffuse = vec4(texture2D(texture_diffuse1, fTextureCoordinates).rgba);
+	vec4 TrueColor = vec4(texture2D(texture_diffuse1, fTextureCoordinates));
 	//vec4 Specular = vec4(texture2D(texture_specular1, fTextureCoordinates).rgb, texture2D(texture_diffuse1, fTextureCoordinates).a);
-	vec3 Height = vec3(texture2D(texture_height1, fTextureCoordinates).rgb);
-	//vec4 Ambient = vec4(texture2D(texture_ambient1, fTextureCoordinates).rgb, texture2D(texture_diffuse1, fTextureCoordinates).a);
+	vec3 Normal = (vec3(texture2D(texture_height1, fTextureCoordinates).rgb)- vec3(0.5, 0.5, 0.5)) * 2.0;
+	vec3 Ambient = vec3(texture2D(texture_ambient1, fTextureCoordinates).rgb)*TrueColor.rgb*LightAmbient*LightColor;
 
-	//Height = (Height - vec3(0.5, 0.5, 0.5)) * 2.0;
-	vec3 RealNormal = vec3(fNormal.x * Height.x, fNormal.y * Height.y, fNormal.z * Height.z);
+	vec3 LightDirFromFace = vec3(dot(fLightDirection, fTangent), dot(fLightDirection, fBitangent), dot(fLightDirection, fNormal));
 
-	vec4 AmbientReflection = LightAmbient * Diffuse;
-
-	float DiffuseFactor = clamp(dot(fLightDirection, RealNormal), 0.0, 1.0);
-	vec4 DiffuseReflection = LightDiffuse * Diffuse * DiffuseFactor * (1.0 - shadow);
+	float DiffuseFactor = clamp(dot(LightDirFromFace, Normal), 0.0, 1.0);
+	vec3 Diffuse = DiffuseFactor * TrueColor.rgb * LightColor * (1.0 - shadow);
 	
-	float SpecularFactor = pow(clamp(dot(HalfAngle, RealNormal), 0.0, 1.0), Shine);
-	vec4 SpecularReflection = LightDiffuse * Diffuse * SpecularFactor * (1.0 - shadow);
+	vec3 HalfAngleFromFace = vec3(dot(HalfAngle, fTangent), dot(HalfAngle, fBitangent), dot(HalfAngle, fNormal));
+	float SpecularFactor = pow(clamp(dot(HalfAngleFromFace, Normal), 0.0, 1.0), 30.0);
+	vec3 Specular = SpecularFactor * TrueColor.rgb * LightSpecular * (1.0 - shadow);
 
-	if (dot(fLightDirection, RealNormal) <= 0.0)
+	if (dot(LightDirFromFace, Normal) <= 0.0)
 	{
-		SpecularReflection = vec4(0.0, 0.0, 0.0, 0.0);
+		Specular = vec3(0.0, 0.0, 0.0);
 	};
 
-	color = AmbientReflection + DiffuseReflection + SpecularReflection;
-	//*/
+	color = vec4(Ambient + Diffuse + Specular, TrueColor.a);
 }

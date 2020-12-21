@@ -69,6 +69,7 @@ void reshape(int w, int h)
 
 void display()
 {
+	//------------------- ПЕРВЫЙ ПРОХОД
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -87,20 +88,28 @@ void display()
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, depthMap);
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_FRONT);
 		scene.render1(IDs[1], cb_rot_angl_y, g_rot_angl);
+		//glCullFace(GL_BACK);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
-	glBindFramebuffer(GL_FRAMEBUFFER, FBO_pe);
+	//------------ВТОРОЙ ПРОХОД-------------------------
+	if (PE_bool) {
+		glBindFramebuffer(GL_FRAMEBUFFER, FBO_pe);
 		glViewport(0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+	}
+	if (!PE_bool)
+		glViewport(0, 0, window_width, window_height);
+
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		glm::mat4x4 view = glm::mat4(1.0f);
 		glUseProgram(IDs[0]);
-		glUniform3fv(glGetUniformLocation(IDs[0], "LightPosition"), 1, &Lamp[0]);
+		glUniform3fv(glGetUniformLocation(IDs[0], "light_pos"), 1, &Lamp[0]);
 		glUniformMatrix4fv(glGetUniformLocation(IDs[0], "proj"), 1, GL_FALSE, &projection[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(IDs[0], "view"), 1, GL_FALSE, &view[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(IDs[0], "light_proj"), 1, GL_FALSE, &light_projection[0][0]);
@@ -116,14 +125,17 @@ void display()
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		if (PE_bool) {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
 
 	//ТРЕТИЙ ПРОХОД---------------------------------------
 		///*
-	glViewport(0, 0, window_width, window_height);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	
+	if (PE_bool) {
+		glViewport(0, 0, window_width, window_height);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 		glUseProgram(IDs[2]);
 
 		glActiveTexture(GL_TEXTURE2);
@@ -133,6 +145,7 @@ void display()
 
 		q.Draw(IDs[2]);
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 	//*/
 
 	glFinish();
@@ -189,7 +202,7 @@ int main(int argc, char** argv)
 		setlocale(LC_ALL, "rus");
 		//подготовка
 		glutInit(&argc, argv);
-		glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
+		glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_STENCIL);
 		glutCreateWindow("My Scene");
 		glewInit();
 		
@@ -224,8 +237,6 @@ int main(int argc, char** argv)
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 			cout << "Ошибка: ФБО не завершён" << endl;
 		}
-		else
-			cout << "ФБО завершён" << endl;
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		//настройка фреймбуфера для постэффекта
@@ -252,13 +263,9 @@ int main(int argc, char** argv)
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 			cout << "Ошибка: ФБО не завершён" << endl;
 		}
-		else
-			cout << "ФБО завершён" << endl;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -268,7 +275,7 @@ int main(int argc, char** argv)
 			vector <const char*> list;
 			list.push_back("obj/wb_in.obj");
 			list.push_back("obj/wb_out.obj");
-			list.push_back("obj/tree_sized.obj");
+			list.push_back("obj/tree.obj");
 			scene.CreateScene(list);
 
 		}
