@@ -1,8 +1,8 @@
-# Blender MTL File: 'scene.blend'
+# Blender MTL File: 'untitled.blend'
 # Material Count: 1
 
-newmtl DIFFUSE
-Ns 96.078431
+newmtl DIFFUSE.002
+Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.050000 0.050000 0.050000
@@ -10,5 +10,6 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd textures\wb_diffuse.png
-map_Bump textures\\wb_normal.png
+map_Kd textures\\wb_out_color.png
+map_Bump textures\\wb_out_nm.png
+map_Ka textures\\wb_out_ao.png
